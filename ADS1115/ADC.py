@@ -3,7 +3,7 @@ import smbus
 
 __all__ = ['ADS1115']
 
-from I2C import Adafruit_I2C
+from .I2C import Adafruit_I2C
 
 # ===========================================================================
 # ADS1115 Class
