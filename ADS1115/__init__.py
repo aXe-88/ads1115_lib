@@ -102,7 +102,7 @@ class ADS1115:
     def __init__(self, address=0x48, ic=__IC_ADS1115, debug=False):
         try:
             self.i2c = smbus.SMBus(1)
-        else:
+        except:
             raise IOError("Could not find i2c device")
 
         self.address = address
