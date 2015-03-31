@@ -1,8 +1,8 @@
-#!/usr/bin/python3
-
 import time
 import smbus
 from I2C import Adafruit_I2C
+
+__all__ = ['ADS1115']
 
 # ===========================================================================
 # ADS1115 Class
