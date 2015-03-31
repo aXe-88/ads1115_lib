@@ -11,7 +11,7 @@ except ImportError:
 	from distutils.core import setup
 
 setup(name='ADS1115',
-      version='0.1.9',
+      version='0.1.10',
       description='Python library for interacting with the ADS1115 Analog to Digital Converter.',
       url='http://github.com/dhhagan/Adafruit-Raspberry-Pi-Python-Code',
       author='David H Hagan',
