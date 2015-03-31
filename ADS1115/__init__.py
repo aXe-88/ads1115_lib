@@ -161,7 +161,7 @@ class ADS1115:
 
         # Write config register to the ADC
         bytes = [(config >> 8) & 0xFF, config & 0xFF]
-        self.i2c.writeList(self.__ADS1015_REG_POINTER_CONFIG, bytes)
+        self.i2c.write_i2c_block_data(self.__ADS1015_REG_POINTER_CONFIG, bytes)
 
         # Wait for the ADC conversion to complete
         # The minimum delay depends on the sps: delay >= 1/sps
@@ -170,7 +170,7 @@ class ADS1115:
         time.sleep(delay)
 
         # Read the conversion results
-        result = self.i2c.readList(self.__ADS1015_REG_POINTER_CONVERT, 2)
+        result = self.i2c.readList(self.address, self.__ADS1015_REG_POINTER_CONVERT, 2)
         # Return a mV value for the ADS1115
         # (Take signed values into account as well)
         val = (result[0] << 8) | (result[1])
