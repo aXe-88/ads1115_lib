@@ -21,6 +21,5 @@ setup(name='ADS1115',
       packages=['ADS1115',
 			],
 	  install_requires=[
-	  	'python-smbus'
 	  ],
       zip_safe=False)
