@@ -1,5 +1,5 @@
 import time
-import smbus
+import smbus2
 
 __all__ = ['ADS1115']
 
@@ -101,7 +101,7 @@ class ADS1115:
     # Constructor
     def __init__(self, address=0x48, ic=__IC_ADS1115, debug=False):
         try:
-            self.i2c = smbus.SMBus(1)
+            self.i2c = smbus2.SMBus(1)
         except:
             raise IOError("Could not find i2c device")
 
