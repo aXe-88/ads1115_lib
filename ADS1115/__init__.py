@@ -99,12 +99,14 @@ class ADS1115:
         }  
 
     # Constructor
-    def __init__(self, address=0x48, ic=__IC_ADS1115, debug=False):
-        try:
-            self.i2c = smbus2.SMBus(1)
-        except:
-            raise IOError("Could not find i2c device")
-
+    def __init__(self, address=0x48, ic=__IC_ADS1115, debug=False, i2c=None):
+        if not i2c: #isinstance(i2c,smbus2.SMBus):
+            try:
+                self.i2c = smbus2.SMBus(1)
+            except:
+                raise IOError("Could not find i2c device")
+        else:
+            self.i2c = i2c
         self.address = address
         self.debug = debug
 
