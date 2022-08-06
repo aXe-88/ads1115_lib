@@ -1,5 +1,6 @@
 import time
 import smbus2
+import RPi.GPIO as GPIO
 
 __all__ = ['ADS1115']
 
@@ -99,7 +100,7 @@ class ADS1115:
         }  
 
     # Constructor
-    def __init__(self, address=0x48, ic=__IC_ADS1115, debug=False, i2c=None):
+    def __init__(self, address=0x48, ic=__IC_ADS1115, debug=False, i2c=None, rdy_pin=25):
         if not i2c: #isinstance(i2c,smbus2.SMBus):
             try:
                 self.i2c = smbus2.SMBus(1)
@@ -116,10 +117,17 @@ class ADS1115:
         else:
             self.ic = ic
             
+        # Setup GPIO
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(rdy_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            
         # Set pga value, so that getLastConversionResult() can use it,
         # any function that accepts a pga value must update this.
         self.pga = 6144
-
+        
+    def __del__(self):
+        GPIO.cleanup()
+        
     def readADCSingleEnded(self, channel=0, pga=6144, sps=250):
         ''' 
             Gets a single-ended ADC reading from the specified channel in mV. 
