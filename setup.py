@@ -22,6 +22,7 @@ setup(name='ADS1115',
       keywords=['ADS1115', 'analog to digital converter', 'adc'],
       packages=['ADS1115'],
       install_requires=[
-          'smbus2'
+          'smbus2',
+	  'RPi.GPIO'
 	  ],
       zip_safe=False)
