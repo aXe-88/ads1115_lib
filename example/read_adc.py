@@ -1,7 +1,7 @@
 import ADS1115
 import time
 
-ads = ADS1115.ADS1115()
+ads = ADS1115.ADS1115(rdy_pin=25) #Explicit use of rdy_pin
 
 while True:
     volt = ads.readADCSingleEnded()
