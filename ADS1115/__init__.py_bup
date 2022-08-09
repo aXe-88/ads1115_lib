@@ -1,6 +1,6 @@
 import time
 import smbus2
-# import threading
+import threading
 import RPi.GPIO as GPIO
 
 __all__ = ['ADS1115']
@@ -14,8 +14,8 @@ class ADS1115:
     # IC Identifiers
     __IC_ADS1115 = 0x01
 
-    # gpio_event = threading.Event()
-    # gpio_event.clear()
+    gpio_event = threading.Event()
+    gpio_event.clear()
 
     # Config Register
     __ADS1115_REG_CONFIG_DR_SHIFT     = 5
@@ -112,9 +112,9 @@ class ADS1115:
         256:__ADS1015_REG_CONFIG_PGA_0_256V
         }  
 
-    # def gpioCallback(self,channel):
-    #     #print("hit")
-    #     self.gpio_event.set()
+    def gpioCallback(self,channel):
+        #print("hit")
+        self.gpio_event.set()
 
     # Constructor
     def __init__(self, address=0x48, ic=__IC_ADS1115, debug=False, i2c=None, rdy_pin=None, timing=False):
@@ -144,7 +144,7 @@ class ADS1115:
             self.sw_timing = False
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(rdy_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-            # GPIO.add_event_detect(rdy_pin, GPIO.FALLING, self.gpioCallback)
+            GPIO.add_event_detect(rdy_pin, GPIO.FALLING, self.gpioCallback)
             self.rdy_pin = rdy_pin
             self.hithresh = [0x80,0x00]
             self.lothresh = [0x7f,0xff]
@@ -214,7 +214,7 @@ class ADS1115:
 
         # Write config register to the ADC
         bytes = [(config >> 8) & 0xFF, config & 0xFF]
-        # self.gpio_event.clear()
+        self.gpio_event.clear()
         self.i2c.write_i2c_block_data(self.address, self.__ADS1015_REG_POINTER_CONFIG, bytes)
 
         #config for next iter
@@ -228,14 +228,12 @@ class ADS1115:
         if self.sw_timing == True:
             time.sleep(delay)
         else:            
-            #if self.gpio_event.wait(timeout=int(1000*delay))==False:
-            #    print("not hit")
-            while GPIO.input(self.rdy_pin) == GPIO.HIGH:
-                pass
+            if self.gpio_event.wait(timeout=int(1000*delay))==False:
+                print("not hit")
         
         # Read the conversion results
         result = self.i2c.read_i2c_block_data(self.address, self.__ADS1015_REG_POINTER_CONVERT, 2)
-        #self.gpio_event.clear()
+        self.gpio_event.clear()
         self.i2c.write_i2c_block_data(self.address, self.__ADS1015_REG_POINTER_CONFIG, bytes)
 
         val = (result[0] << 8) | (result[1])
@@ -251,13 +249,11 @@ class ADS1115:
         if self.sw_timing == True:
             time.sleep(delay)
         else:            
-            # if self.gpio_event.wait(timeout=int(1000*delay))==False:
-            #     print("not hit")
-            while GPIO.input(self.rdy_pin) == GPIO.HIGH:
-                pass
+            if self.gpio_event.wait(timeout=int(1000*delay))==False:
+                print("not hit")
 
         result = self.i2c.read_i2c_block_data(self.address, self.__ADS1015_REG_POINTER_CONVERT, 2)
-        # self.gpio_event.clear()
+        self.gpio_event.clear()
         self.i2c.write_i2c_block_data(self.address, self.__ADS1015_REG_POINTER_CONFIG, bytes)
 
         val = (result[0] << 8) | (result[1])
@@ -273,13 +269,11 @@ class ADS1115:
         if self.sw_timing == True:
             time.sleep(delay)
         else:            
-            # if self.gpio_event.wait(timeout=int(1000*delay))==False:
-                # print("not hit")
-            while GPIO.input(self.rdy_pin) == GPIO.HIGH:
-                pass
+            if self.gpio_event.wait(timeout=int(1000*delay))==False:
+                print("not hit")
 
         result = self.i2c.read_i2c_block_data(self.address, self.__ADS1015_REG_POINTER_CONVERT, 2)
-        # self.gpio_event.clear()
+        self.gpio_event.clear()
         self.i2c.write_i2c_block_data(self.address, self.__ADS1015_REG_POINTER_CONFIG, bytes)
         
         val = (result[0] << 8) | (result[1])
@@ -291,11 +285,9 @@ class ADS1115:
         if self.sw_timing == True:
             time.sleep(delay)
         else:            
-            # if self.gpio_event.wait(timeout=int(1000*delay))==False:
-            #     print("not hit")
-            while GPIO.input(self.rdy_pin) == GPIO.HIGH:
-                pass
-            
+            if self.gpio_event.wait(timeout=int(1000*delay))==False:
+                print("not hit")
+
         result = self.i2c.read_i2c_block_data(self.address, self.__ADS1015_REG_POINTER_CONVERT, 2)
         
         val = (result[0] << 8) | (result[1])
@@ -380,7 +372,7 @@ class ADS1115:
 
         # Write config register to the ADC
         bytes = [(config >> 8) & 0xFF, config & 0xFF]
-        #self.gpio_event.clear()
+        self.gpio_event.clear()
         self.i2c.write_i2c_block_data(self.address, self.__ADS1015_REG_POINTER_CONFIG, bytes)
 
         # Wait for the ADC conversion to complete
@@ -390,11 +382,8 @@ class ADS1115:
         if self.sw_timing == True:
             time.sleep(delay)
         else:            
-            # if self.gpio_event.wait(timeout=int(1000*delay))==False:
-            #     print("not hit")
-            
-            while GPIO.input(self.rdy_pin) == GPIO.HIGH:
-                pass
+            if self.gpio_event.wait(timeout=int(1000*delay))==False:
+                print("not hit")
 
         # Read the conversion results
         result = self.i2c.read_i2c_block_data(self.address, self.__ADS1015_REG_POINTER_CONVERT, 2)
